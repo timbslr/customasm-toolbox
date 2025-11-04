@@ -1,0 +1,25 @@
+{
+  "name": "customasm-toolbox",
+  "displayName": "customasm-toolbox",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "customasm-assembly",
+      "aliases": ["customasm-assembly", "customasm-assembly"],
+      "extensions": [".asm"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "customasm-assembly",
+      "scopeName": "source.customasm-assembly",
+      "path": "./syntaxes/customasm-assembly.tmLanguage.json"
+    }]
+  }
+}
