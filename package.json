@@ -9,7 +9,15 @@
 	"categories": [
 		"Programming Languages"
 	],
+	"activationEvents": [],
+	"main": "./src/extension.js",
 	"contributes": {
+		"commands": [
+			{
+				"command": "customasm-syntax-highlighting.helloWorld",
+				"title": "Hello World"
+			}
+		],
 		"languages": [
 			{
 				"id": "customasm-assembly",
@@ -27,8 +35,21 @@
 			{
 				"language": "customasm-assembly",
 				"scopeName": "source.customasm-assembly",
-				"path": "./syntaxes/customasm-assembly.tmLanguage.json"
+				"path": "./src/syntaxes/customasm-assembly.tmLanguage.json"
 			}
 		]
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.105.0",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "22.x",
+		"eslint": "^9.36.0",
+		"@vscode/test-cli": "^0.0.11",
+		"@vscode/test-electron": "^2.5.2"
 	}
 }
