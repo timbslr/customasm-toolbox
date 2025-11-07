@@ -5,13 +5,11 @@
 		{ "include": "#directives" },
 		{ "include": "#labels" },
 		{ "include": "#constants" },
-		{ "include": "#operators" },
 		{ "include": "#types" },
 		{ "include": "#blockComments" },
 		{ "include": "#comments" },
 		{ "include": "#strings" },
 		{ "include": "#current" },
-		{ "include": "#mnemonics" },
 		{ "include": "#functions" }
 	],
 	"repository": {
@@ -43,11 +41,11 @@
 		"labels": {
 			"patterns": [
 				{
-					"name": "support.function.customasm-assembly",
+					"name": "entity.name.function.customasm-assembly",
 					"match": "\\.*[a-zA-Z0-9_]+:\\s*$"
 				},
 				{
-					"name": "support.function.customasm-assembly",
+					"name": "entity.name.function.customasm-assembly",
 					"match": "[a-zA-Z0-9_]+(\\.+[a-zA-Z0-9_]+)+|\\.+[a-zA-Z0-9_]+"
 				}
 			]
@@ -61,14 +59,6 @@
 				{
 					"name": "keyword.control.customasm-assembly",
 					"match": "#(ruledef|subruledef|const|include|bits|addr|addr_end|outp|bits|fill|bankdef|bank|align|res|once|assert|fn|if|elif|else|d\\d*)\\b"
-				}
-			]
-		},
-		"operators": {
-			"patterns": [
-				{
-					"name": "entity.name.class.customasm-assembly",
-					"match": "=>"
 				}
 			]
 		},
@@ -88,14 +78,6 @@
 				}
 			]
 		},
-		"mnemonics": {
-			"patterns": [
-				{
-					"name": "entity.name.tag.customasm-assembly",
-					"match": "^\\s*[a-zA-Z0-9_]*\\s+(?!=(?!>))"
-				}
-			]
-		},
 		"current": {
 			"patterns": [
 				{
@@ -108,11 +90,11 @@
 			"patterns": [
 				{
 					"match": "(asm)\\w*\\{.*?\\}",
-					"captures": { "1": { "name": "support.function.customasm-assembly" } }
+					"captures": { "1": { "name": "entity.name.function.customasm-assembly" } }
 				},
 				{
 					"match": "\\b(bankof|assert|sizeof|bankof|le|utf8|ascii|utf16be|utf16le|utf32be|utf32le|incbin|incbinstr|inchexstr)\\(.*\\)",
-					"captures": { "1": { "name": "support.function.customasm-assembly" } }
+					"captures": { "1": { "name": "entity.name.function.customasm-assembly" } }
 				}
 			]
 		}
