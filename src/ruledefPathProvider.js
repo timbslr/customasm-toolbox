@@ -17,14 +17,13 @@ export function getRuledefPaths() {
 		assertArrayOfStrings(paths);
 		return toAbsolutePaths(paths, workspacePath.toString());
 	} catch (err1) {
-		console.log(`package.json not found, trying .customasm.json now`);
 		try {
 			const customasmConfig = JSON.parse(readFileSync(customasmConfigPath).toString());
 			paths = customasmConfig.ruleDefinitions;
 			assertArrayOfStrings(paths);
 			return toAbsolutePaths(paths, workspacePath.toString());
 		} catch (err2) {
-			console.error("Couldn't resolve rule definitions - no valid path specified!");
+			console.error("customasm-toolbox: Couldn't resolve rule definitions - no valid path specified!");
 			return [];
 		}
 	}

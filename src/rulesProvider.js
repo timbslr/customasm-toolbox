@@ -1,7 +1,9 @@
 import { readFileSync } from "fs";
 import { getRuledefPaths } from "./ruledefPathProvider.js";
+import assert from "assert";
 
 export let rules = [];
+export let subrules = [];
 
 export function getMnemonics() {
 	updateRules();
@@ -9,21 +11,48 @@ export function getMnemonics() {
 }
 
 /**
+ * This extension treats all subrules to define operands
+ */
+export function getSubruleOperands() {
+	updateRules();
+	return subrules.reduce((acc, curr) => acc.concat(curr.operands), []);
+}
+
+/**
  * Updates the rules by parsing them from the files the user specified in the config
- * @returns {{mnemonic: string, operands: {name: string, type: string}[]}[]} An array of objects containing the mnemonic and an array of operands
+ * @returns {void}
  */
 export function updateRules() {
-	rules.length = 0; //clear rules
+	const newRules = [];
+	const newSubrules = [];
+
 	const ruledefPaths = getRuledefPaths();
 	for (const ruledefPath of ruledefPaths) {
-		const content = readFileSync(ruledefPath).toString();
+		const content = removeComments(readFileSync(ruledefPath).toString());
+
 		const ruledefStrings = extractRulesFromString(content);
 		ruledefStrings.forEach((rule) => {
-			rules.push(parseRuleString(rule));
+			newRules.push(parseRuleString(rule));
+		});
+
+		const subruledefObjects = extractSubrulesFromString(content);
+		subruledefObjects.forEach((rule) => {
+			newSubrules.push(rule);
 		});
 	}
 
-	return rules;
+	//only update rules and newRules if they have changed
+	try {
+		assert.deepEqual(rules, newRules);
+	} catch (notEqual) {
+		rules = newRules;
+	}
+
+	try {
+		assert.deepEqual(subrules, newSubrules);
+	} catch (notEqual) {
+		subrules = newSubrules;
+	}
 }
 
 /**
@@ -47,6 +76,25 @@ function extractRulesFromString(text) {
 		ruledefs = ruledefs.concat(newRules);
 	}
 	return ruledefs;
+}
+
+function extractSubrulesFromString(text) {
+	const regex = new RegExp("#subruledef\\s*([a-zA-Z0-9_]+)\\s*\\{\\s*[\\s\\S]*?^\\s*\\}\\s*$", "gm"); //TODO match whole block, may be that a single line "}" is not the end of the block
+	let match;
+	let subruledefs = [];
+	while ((match = regex.exec(text)) !== null) {
+		let matchedString = match[0];
+		const subruleName = match[1];
+		matchedString = matchedString.replace(/#subruledef\s*([a-zA-Z0-9_]+)\s*\{/, "");
+
+		const newRules = matchedString
+			.trim()
+			.split("\n")
+			.map((entry) => entry.trim().split("=>")[0].trim().split(" ")[0]);
+		newRules.pop(); //remove last entry as this is the "}" in the single line
+		subruledefs.push({ subruleName: subruleName, operands: newRules });
+	}
+	return subruledefs;
 }
 
 /**
@@ -74,4 +122,13 @@ function parseRuleString(rule) {
 	});
 
 	return { mnemonic: mnemonic, operands: operandObjects };
+}
+
+/**
+ * Doesn't work for nested comments yet
+ * @param {*} text
+ * @returns
+ */
+function removeComments(text) {
+	return text.replace(/;\*[\s\S]*?\*;/gm, "").replace(/;.*$/gm, "");
 }

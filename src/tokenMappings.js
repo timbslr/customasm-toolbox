@@ -4,6 +4,11 @@ const tokenMapping = [
 		mappedTokenType: "struct",
 		mappedTokenModifiers: ["declaration"],
 	},
+	{
+		tokenKind: "subruleOperand",
+		mappedTokenType: "operator",
+		mappedTokenModifiers: ["declaration"],
+	},
 ];
 
 /**

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 //import { mnemonics } from "./mnemonicsProvider.js";
 import { matchRegex } from "./regexMatcher.js";
-import { getMnemonics } from "./rulesProvider.js";
+import { getMnemonics, getSubruleOperands } from "./rulesProvider.js";
 import getTokenMapping from "./tokenMappings.js";
 
 // Define what kinds of tokens and modifiers we can return
@@ -14,15 +14,26 @@ export const semanticTokensProvider = {
 		const tokensBuilder = new vscode.SemanticTokensBuilder(semanticTokensLegend);
 
 		const mnemonics = getMnemonics();
-		const mnemonicsRegex = new RegExp(`\\b(${mnemonics.join("|")})\\b`, "g");
-		const matchedMnemonicRanges = matchRegex(mnemonicsRegex, document);
+		let semanticTokens = getSemanticTokens(mnemonics, "mnemonic", document);
+		const subruleOperands = getSubruleOperands();
+		semanticTokens = semanticTokens.concat(getSemanticTokens(subruleOperands, "subruleOperand", document));
 
-		const tokenObject = getTokenMapping("mnemonic");
-
-		matchedMnemonicRanges.forEach((mnemonicRange) => {
-			tokensBuilder.push(mnemonicRange, tokenObject.mappedTokenType, tokenObject.mappedTokenModifiers);
+		semanticTokens.forEach((semanticToken) => {
+			tokensBuilder.push(semanticToken.range, semanticToken.tokenType, semanticToken.tokenModifiers);
 		});
 
 		return tokensBuilder.build();
 	},
 };
+
+function getSemanticTokens(keywords, tokenKind, document) {
+	const semanticTokens = [];
+	const keywordRegex = new RegExp(`\\b(${keywords.join("|")})\\b`, "g");
+	const matchedRanges = matchRegex(keywordRegex, document);
+	const tokenMapping = getTokenMapping(tokenKind);
+	matchedRanges.forEach((range) => {
+		semanticTokens.push({ range: range, tokenType: tokenMapping.mappedTokenType, tokenModifiers: tokenMapping.mappedTokenModifiers });
+	});
+
+	return semanticTokens;
+}
