@@ -12,14 +12,14 @@ export function getRuledefPaths() {
 	const customasmConfigPath = join(workspacePath, ".customasm.json");
 	let paths = [];
 	try {
-		const packageJSON = JSON.parse(readFileSync(packagePath));
+		const packageJSON = JSON.parse(readFileSync(packagePath).toString());
 		paths = packageJSON.customasmRuleDefinitions;
 		assertArrayOfStrings(paths);
 		return toAbsolutePaths(paths, workspacePath.toString());
 	} catch (err1) {
 		console.log(`package.json not found, trying .customasm.json now`);
 		try {
-			const customasmConfig = JSON.parse(readFileSync(customasmConfigPath));
+			const customasmConfig = JSON.parse(readFileSync(customasmConfigPath).toString());
 			paths = customasmConfig.ruleDefinitions;
 			assertArrayOfStrings(paths);
 			return toAbsolutePaths(paths, workspacePath.toString());

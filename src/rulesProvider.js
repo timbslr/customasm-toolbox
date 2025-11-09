@@ -1,8 +1,12 @@
 import { readFileSync } from "fs";
-import * as vscode from "vscode";
 import { getRuledefPaths } from "./ruledefPathProvider.js";
 
 export let rules = [];
+
+export function getMnemonics() {
+	updateRules();
+	return rules.map((rule) => rule.mnemonic);
+}
 
 /**
  * Updates the rules by parsing them from the files the user specified in the config
@@ -52,7 +56,6 @@ function extractRulesFromString(text) {
  */
 function parseRuleString(rule) {
 	const indexOfAssignOperator = rule.indexOf("=>");
-	const operandsString = rule.substring(0, indexOfAssignOperator);
 	const mnemonic = rule.split(" ")[0];
 	const operandStrings = rule
 		.substring(mnemonic.length, indexOfAssignOperator)

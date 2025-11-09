@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 //import { mnemonics } from "./mnemonicsProvider.js";
 import { matchRegex } from "./regexMatcher.js";
-import { rules } from "./rulesProvider.js";
+import { getMnemonics } from "./rulesProvider.js";
 import getTokenMapping from "./tokenMappings.js";
 
 // Define what kinds of tokens and modifiers we can return
@@ -13,7 +13,7 @@ export const semanticTokensProvider = {
 	provideDocumentSemanticTokens(document) {
 		const tokensBuilder = new vscode.SemanticTokensBuilder(semanticTokensLegend);
 
-		const mnemonics = rules.map((rule) => rule.mnemonic);
+		const mnemonics = getMnemonics();
 		const mnemonicsRegex = new RegExp(`\\b(${mnemonics.join("|")})\\b`, "g");
 		const matchedMnemonicRanges = matchRegex(mnemonicsRegex, document);
 
