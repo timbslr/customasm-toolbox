@@ -3,6 +3,7 @@ import { semanticTokensProvider, semanticTokensLegend } from "./semanticTokensPr
 import { updateRules } from "./rulesProvider.js";
 import { getRuledefPaths } from "./ruledefPathProvider.js";
 import { completionItemProvider } from "./completionItemProvider.js";
+import { hoverProvider } from "./hoverProvider.js";
 
 /** This method is called when the extension is activated
  * @param {vscode.ExtensionContext} context
@@ -17,6 +18,9 @@ export function activate(context) {
 
 	const registeredCompletionItemProvider = vscode.languages.registerCompletionItemProvider(selector, completionItemProvider, " "); // space after mnemonic triggers suggestions
 	context.subscriptions.push(registeredCompletionItemProvider);
+
+	const registeredHoverProvider = vscode.languages.registerHoverProvider(selector, hoverProvider);
+	context.subscriptions.push(registeredHoverProvider);
 
 	// update the rules if any of the specified rule files is updated
 	getRuledefPaths().forEach((ruledefPath) => {
