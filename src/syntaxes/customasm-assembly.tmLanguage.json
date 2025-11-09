@@ -8,6 +8,7 @@
 		{ "include": "#types" },
 		{ "include": "#blockComments" },
 		{ "include": "#comments" },
+		{ "include": "#operators" },
 		{ "include": "#strings" },
 		{ "include": "#current" },
 		{ "include": "#functions" }
@@ -58,7 +59,7 @@
 				},
 				{
 					"name": "keyword.control.customasm-assembly",
-					"match": "#(ruledef|subruledef|const|include|bits|addr|addr_end|outp|bits|fill|bankdef|bank|align|res|once|assert|fn|if|elif|else|d\\d*)\\b"
+					"match": "#(ruledef|subruledef|const|include|addr|addr_end|outp|bits|fill|bankdef|bank|align|res|once|assert|fn|if|labelalign|cpudef|tokendef|size|elif|else|d\\d*)\\b"
 				}
 			]
 		},
@@ -75,6 +76,14 @@
 				{
 					"name": "constant.numeric.customasm-assembly",
 					"match": "0b[0-1]+|%(0|1)+|0o[0-7]+|0x[0-9a-fA-F]+|\\b\\d+\\b"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"name": "keyword.operator.customasm-assembly",
+					"match": "=>"
 				}
 			]
 		},
