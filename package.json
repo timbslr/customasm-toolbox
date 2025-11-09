@@ -3,7 +3,7 @@
 	"displayName": "customasm-toolbox",
 	"description": "",
 	"type": "module",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.105.0"
 	},
