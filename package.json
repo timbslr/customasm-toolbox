@@ -10,6 +10,7 @@
 	"categories": [
 		"Programming Languages"
 	],
+	"publisher": "CodingT",
 	"activationEvents": [],
 	"main": "./src/extension.js",
 	"repository": {
