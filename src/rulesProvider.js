@@ -4,12 +4,16 @@ import { getRuledefPaths } from "./ruledefPathProvider.js";
 
 export let rules = [];
 
+/**
+ * Updates the rules by parsing them from the files the user specified in the config
+ * @returns {{mnemonic: string, operands: {name: string, type: string}[]}[]} An array of objects containing the mnemonic and an array of operands
+ */
 export function updateRules() {
 	rules.length = 0; //clear rules
 	const ruledefPaths = getRuledefPaths();
 	for (const ruledefPath of ruledefPaths) {
 		const content = readFileSync(ruledefPath).toString();
-		const ruledefStrings = extractRuledefs(content);
+		const ruledefStrings = extractRulesFromString(content);
 		ruledefStrings.forEach((rule) => {
 			rules.push(parseRuleString(rule));
 		});
@@ -18,7 +22,12 @@ export function updateRules() {
 	return rules;
 }
 
-function extractRuledefs(text) {
+/**
+ * Extracts all rules from a given text by searching for #ruledef blocks and returning their rules
+ * @param {string} text
+ * @returns {string[]} The rules from the #ruledef blocks in string format
+ */
+function extractRulesFromString(text) {
 	const regex = new RegExp("#ruledef\\s*\\{\\s*[\\s\\S]*?^\\s*\\}\\s*$", "gm"); //TODO match whole block, may be that a single line "}" is not the end of the block
 	let match;
 	let ruledefs = [];
@@ -36,6 +45,11 @@ function extractRuledefs(text) {
 	return ruledefs;
 }
 
+/**
+ * Parses a rule string into an object containing the rule's attributes
+ * @param {string} rule The rule to be parsed
+ * @returns {{mnemonic: string, operands: {name: string, type: string}[]}} The parsed object resulting from the rule string
+ */
 function parseRuleString(rule) {
 	const indexOfAssignOperator = rule.indexOf("=>");
 	const operandsString = rule.substring(0, indexOfAssignOperator);

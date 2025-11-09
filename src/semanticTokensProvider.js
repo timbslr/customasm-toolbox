@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 //import { mnemonics } from "./mnemonicsProvider.js";
 import { matchRegex } from "./regexMatcher.js";
 import { rules } from "./rulesProvider.js";
+import getTokenMapping from "./tokenMappings.js";
 
 // Define what kinds of tokens and modifiers we can return
 const tokenTypes = ["namespace", "class", "enum", "interface", "struct", "typeParameter", "type", "parameter", "variable", "property", "enumMember", "decorator", "event", "function", "method", "macro", "label", "comment", "string", "keyword", "number", "regexp", "operator"];
@@ -11,12 +12,15 @@ export const semanticTokensLegend = new vscode.SemanticTokensLegend(tokenTypes, 
 export const semanticTokensProvider = {
 	provideDocumentSemanticTokens(document) {
 		const tokensBuilder = new vscode.SemanticTokensBuilder(semanticTokensLegend);
-		const text = document.getText();
+
 		const mnemonics = rules.map((rule) => rule.mnemonic);
 		const mnemonicsRegex = new RegExp(`\\b(${mnemonics.join("|")})\\b`, "g");
-		const matchedMnemonicRanges = matchRegex(mnemonicsRegex, document, text);
+		const matchedMnemonicRanges = matchRegex(mnemonicsRegex, document);
+
+		const tokenObject = getTokenMapping("mnemonic");
+
 		matchedMnemonicRanges.forEach((mnemonicRange) => {
-			tokensBuilder.push(mnemonicRange, "struct", ["declaration"]);
+			tokensBuilder.push(mnemonicRange, tokenObject.mappedTokenType, tokenObject.mappedTokenModifiers);
 		});
 
 		return tokensBuilder.build();

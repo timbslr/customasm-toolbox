@@ -1,6 +1,6 @@
 {
-	"name": "customasm-syntax-highlighting",
-	"displayName": "customasm-syntax-highlighting",
+	"name": "customasm-toolbox",
+	"displayName": "customasm-toolbox",
 	"description": "",
 	"type": "module",
 	"version": "0.0.1",
@@ -15,7 +15,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "customasm-syntax-highlighting.helloWorld",
+				"command": "customasm-toolbox.helloWorld",
 				"title": "Hello World"
 			}
 		],
