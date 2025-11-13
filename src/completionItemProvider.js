@@ -46,9 +46,14 @@ function getCompletionItems(possibleOperands, currentOperands) {
 			if (operands.length > amountOfOperandsAlreadyChecked) {
 				const operandType = operands[amountOfOperandsAlreadyChecked].type;
 				if (operandType) {
-					subrules.get(operandType)?.forEach((operand) => {
-						completionStrings.add(operand);
-					});
+					const subruleOperands = subrules.get(operandType);
+					if (subruleOperands) {
+						subruleOperands.forEach((operand) => {
+							completionStrings.add(operand);
+						});
+					} else {
+						completionStrings.add(`{${operands[amountOfOperandsAlreadyChecked].name}: ${operandType}}`);
+					}
 				} else {
 					completionStrings.add(operands[amountOfOperandsAlreadyChecked].name);
 				}
@@ -56,7 +61,14 @@ function getCompletionItems(possibleOperands, currentOperands) {
 		}
 	});
 	completionStrings.forEach((completionString) => {
-		completionItems.push(new vscode.CompletionItem(completionString, vscode.CompletionItemKind.Operator));
+		if (completionString.includes("{")) {
+			const item = new vscode.CompletionItem(completionString, vscode.CompletionItemKind.Snippet);
+			const escapedCompletionString = completionString.replace(/\}/g, "\\}"); //only closing brackets need escaping
+			item.insertText = new vscode.SnippetString(`\${1:${escapedCompletionString}}`);
+			completionItems.push(item);
+		} else {
+			completionItems.push(new vscode.CompletionItem(completionString, vscode.CompletionItemKind.Operator));
+		}
 	});
 
 	return completionItems;
