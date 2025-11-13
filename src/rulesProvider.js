@@ -6,7 +6,11 @@ import assert from "assert";
  * @type {Map<string, {name: string, type:string}[][]>}
  */
 export let rules = new Map();
-export let subrules = [];
+
+/**
+ * @type {Map<string, string[]>}
+ */
+export let subrules = new Map();
 
 export function getMnemonics() {
 	updateRules();
@@ -18,7 +22,11 @@ export function getMnemonics() {
  */
 export function getSubruleOperands() {
 	updateRules();
-	return subrules.reduce((acc, curr) => acc.concat(curr.operands), []);
+	let operands = [];
+	subrules.forEach((subrule) => {
+		operands = operands.concat([...subrule.entries()]);
+	});
+	return operands;
 }
 
 /**
@@ -27,7 +35,7 @@ export function getSubruleOperands() {
  */
 export function updateRules() {
 	const newRules = new Map();
-	const newSubrules = [];
+	const newSubrules = new Map();
 
 	const ruledefPaths = getRuledefPaths();
 	for (const ruledefPath of ruledefPaths) {
@@ -47,7 +55,9 @@ export function updateRules() {
 
 		const subruledefObjects = extractSubrulesFromString(content);
 		subruledefObjects.forEach((rule) => {
-			newSubrules.push(rule);
+			let value = newSubrules.get(rule.subruleName) || [];
+			value = value.concat(rule.operands);
+			newSubrules.set(rule.subruleName, value);
 		});
 	}
 

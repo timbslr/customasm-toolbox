@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { semanticTokensProvider, semanticTokensLegend } from "./semanticTokensProvider.js";
-import { rules, updateRules } from "./rulesProvider.js";
+import { updateRules } from "./rulesProvider.js";
 import { getRuledefPaths } from "./ruledefPathProvider.js";
 import { completionItemProvider } from "./completionItemProvider.js";
 import { hoverProvider } from "./hoverProvider.js";

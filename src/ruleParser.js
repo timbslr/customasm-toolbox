@@ -7,5 +7,8 @@ export function parseInstruction(line) {
 	let operandsString = match[2];
 	operandsString = operandsString.includes("=>") ? operandsString.substring(0, operandsString.indexOf("=>")) : operandsString;
 	const operands = operandsString.split(",").map((entry) => entry.trim());
+	if (operands.length > 0 && operands[operands.length - 1] == "") {
+		operands.pop();
+	}
 	return { mnemonic: match[1], operands: operands };
 }
