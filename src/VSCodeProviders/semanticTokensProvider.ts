@@ -50,6 +50,10 @@ export const semanticTokensProvider = {
 };
 
 function getSemanticTokens(keywords: string[], tokenKind: string, document: vscode.TextDocument): SemanticToken[] {
+	if (keywords.length == 0) {
+		return [];
+	}
+
 	const semanticTokens: SemanticToken[] = [];
 	const keywordRegex = new RegExp(`\\b(${keywords.join("|")})\\b`, "g");
 	const matchedRanges = matchRegex(keywordRegex, document);

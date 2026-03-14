@@ -7,6 +7,11 @@ import * as vscode from "vscode";
  * @returns The ranges in the document that matched the regular expression
  */
 export function matchRegex(regExp: RegExp, document: vscode.TextDocument): vscode.Range[] {
+	if (!regExp.source || regExp.source === "(?:)") {
+		//return if the regex is empty (new RegExp("") compiles to "(?:)")
+		return [];
+	}
+
 	const documentText = document.getText();
 	const matchingRanges = [];
 	let match;
