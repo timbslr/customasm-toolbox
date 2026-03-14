@@ -53,13 +53,37 @@ function getSemanticTokens(keywords: string[], tokenKind: string, document: vsco
 	const semanticTokens: SemanticToken[] = [];
 	const keywordRegex = new RegExp(`\\b(${keywords.join("|")})\\b`, "g");
 	const matchedRanges = matchRegex(keywordRegex, document);
+
 	const tokenMapping = getTokenMapping(tokenKind);
 	if (!tokenMapping) {
 		return [];
 	}
+
+	const commentRanges = getCommentRanges(document);
+
 	matchedRanges.forEach((range) => {
-		semanticTokens.push({ range: range, tokenType: tokenMapping.mappedTokenType, tokenModifiers: tokenMapping.mappedTokenModifiers });
+		const isInsideComment = commentRanges.some((c) => c.contains(range.start) || c.contains(range.end));
+
+		if (!isInsideComment) {
+			semanticTokens.push({ range: range, tokenType: tokenMapping.mappedTokenType, tokenModifiers: tokenMapping.mappedTokenModifiers });
+		}
 	});
 
 	return semanticTokens;
+}
+
+function getCommentRanges(document: vscode.TextDocument): vscode.Range[] {
+	const commentRegexes = [
+		/;\*[\s\S]*?\*;/g, // block comments
+		/;.*$/gm, // line comments
+	];
+
+	const ranges: vscode.Range[] = [];
+
+	for (const regex of commentRegexes) {
+		const matches = matchRegex(regex, document);
+		ranges.push(...matches);
+	}
+
+	return ranges;
 }
