@@ -50,7 +50,7 @@ export const semanticTokensProvider = {
 };
 
 function getSemanticTokens(keywords: string[], tokenKind: string, document: vscode.TextDocument): SemanticToken[] {
-	if (keywords.length == 0) {
+	if (keywords.length === 0) {
 		return [];
 	}
 

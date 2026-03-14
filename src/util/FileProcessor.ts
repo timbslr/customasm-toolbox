@@ -43,7 +43,7 @@ export default class FileProcessor {
 	 * @returns The parsed rules from the #ruledef blocks
 	 */
 	static extractRuleDefinitions(text: string): Rule[] {
-		const regex = new RegExp("#ruledef\\s*\\{\\s*([\\s\\S]*?^)\\s*\\}\\s*$", "gm"); //TODO match whole block, may be that a single line "}" is not the end of the block
+		const regex = /#ruledef\s*\{([\s\S]*?)\n\}/gm;
 		let match;
 		let ruledefBlocks = [];
 
@@ -65,7 +65,7 @@ export default class FileProcessor {
 	 * @returns The parsed rules from the #ruledef blocks
 	 */
 	static extractOperands(text: string): { type: string; values: string[] }[] {
-		const regex = new RegExp("#subruledef\\s*([a-zA-Z0-9_]+)\\s*\\{\\s*([\\s\\S]*?^)\\s*\\}\\s*$", "gm"); //TODO match whole block, may be that a single line "}" is not the end of the block
+		const regex = /#subruledef\s*([a-zA-Z0-9_]+)\s*\{([\s\S]*?)\n\}/gm;
 		let match;
 		let subruledefs = [];
 
