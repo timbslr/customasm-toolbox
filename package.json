@@ -2,7 +2,7 @@
 	"name": "customasm-toolbox",
 	"displayName": "customasm-toolbox",
 	"description": "",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"engines": {
 		"vscode": "^1.106.0"
 	},

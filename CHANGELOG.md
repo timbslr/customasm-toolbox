@@ -2,6 +2,11 @@
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.3.1]
+
+- added option to highlight clobbered registers
+- removed option to configure the extension inside the package.json file. A .customasm.json file is now always required!
+
 ## [0.2.2]
 
 - static syntax highlighting works again
