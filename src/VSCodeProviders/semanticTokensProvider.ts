@@ -30,15 +30,16 @@ const tokenTypes = [
 	"number",
 	"regexp",
 	"operator",
+	"structClobbers",
 ];
-const tokenModifiers = ["declaration", "definition", "readonly", "static", "deprecated", "abstract", "async", "modification", "documentation", "defaultLibrary"];
+const tokenModifiers = ["declaration", "definition", "readonly", "static", "deprecated", "abstract", "async", "modification", "documentation", "defaultLibrary", "clobbers"];
 export const semanticTokensLegend = new vscode.SemanticTokensLegend(tokenTypes, tokenModifiers);
 
 export const semanticTokensProvider = {
 	provideDocumentSemanticTokens(document: vscode.TextDocument): vscode.SemanticTokens {
 		const tokensBuilder = new vscode.SemanticTokensBuilder(semanticTokensLegend);
 
-		let semanticTokens = getSemanticTokens(CustomAsm.mnemonics, "mnemonic", document);
+		let semanticTokens = getSemanticTokens(CustomAsm.mnemonics, "mnemonic", document, CustomAsm.getClobberedMap());
 		semanticTokens = semanticTokens.concat(getSemanticTokens(CustomAsm.operandValues, "subruleOperand", document));
 
 		semanticTokens.forEach((semanticToken) => {
@@ -49,7 +50,7 @@ export const semanticTokensProvider = {
 	},
 };
 
-function getSemanticTokens(keywords: string[], tokenKind: string, document: vscode.TextDocument): SemanticToken[] {
+function getSemanticTokens(keywords: string[], tokenKind: string, document: vscode.TextDocument, clobberedRegistersMap?: Map<string, string[]>): SemanticToken[] {
 	if (keywords.length === 0) {
 		return [];
 	}
@@ -69,7 +70,13 @@ function getSemanticTokens(keywords: string[], tokenKind: string, document: vsco
 		const isInsideComment = commentRanges.some((c) => c.contains(range.start) || c.contains(range.end));
 
 		if (!isInsideComment) {
-			semanticTokens.push({ range: range, tokenType: tokenMapping.mappedTokenType, tokenModifiers: tokenMapping.mappedTokenModifiers });
+			const modifiers = [...tokenMapping.mappedTokenModifiers];
+			let tokenType = tokenMapping.mappedTokenType;
+			if (clobberedRegistersMap?.has(document.getText(range))) {
+				modifiers.push("clobbers");
+				tokenType = "structClobbers";
+			}
+			semanticTokens.push({ range, tokenType, tokenModifiers: modifiers });
 		}
 	});
 

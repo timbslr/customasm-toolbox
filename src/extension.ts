@@ -25,10 +25,22 @@ export function activate(context: vscode.ExtensionContext) {
 	// update the rules if any of the specified rule files is updated
 	Path.getRuleDefinitionPaths()?.forEach((ruledefPath) => {
 		const ruledefWatcher = vscode.workspace.createFileSystemWatcher(ruledefPath);
+
 		ruledefWatcher.onDidChange(() => {
 			CustomAsm.updateRules();
 		});
 	});
+
+	vscode.workspace.getConfiguration().update(
+		"editor.semanticTokenColorCustomizations",
+		{
+			enabled: true,
+			rules: {
+				structClobbers: "#ec7b5b",
+			},
+		},
+		vscode.ConfigurationTarget.Workspace,
+	);
 }
 
 export function deactivate() {}

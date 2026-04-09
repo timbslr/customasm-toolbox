@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import Path from "./util/Path";
 import FileProcessor from "./util/FileProcessor";
+import ClobberedRegistersProvider from "./util/ClobberedRegistersProvider.js";
 
 type Mnemonic = string;
 export type OperandDefinition = { name: string; type: string | null };
@@ -20,6 +21,19 @@ export default class CustomAsm {
 	 * Maps an operand-type to its allowed values
 	 */
 	static operands: Map<string, string[]>;
+
+	/**
+	 * A Map containing all mnemonics (= key) of the instructions that clobber a list of registers (= value)
+	 */
+	private static clobberedMap: Map<string, string[]>;
+
+	static getClobberedMap() {
+		if (!this.clobberedMap) {
+			this.clobberedMap = ClobberedRegistersProvider.getClobberedRegistersList();
+		}
+
+		return this.clobberedMap;
+	}
 
 	/**
 	 * @returns An array of strings containing all defined mnemonics

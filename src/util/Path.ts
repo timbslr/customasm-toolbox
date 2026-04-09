@@ -14,10 +14,6 @@ export default class Path {
 		return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 	}
 
-	static get packageJSONPath(): string | undefined {
-		return this.workspacePath ? join(this.workspacePath, "package.json") : undefined;
-	}
-
 	static get customasmConfigPath(): string | undefined {
 		return this.workspacePath ? join(this.workspacePath, ".customasm.json") : undefined;
 	}
@@ -49,13 +45,6 @@ export default class Path {
 	static getRuleDefinitionPaths(): string[] | undefined {
 		if (!this.workspacePath) {
 			return undefined;
-		}
-
-		if (this.packageJSONPath && existsSync(this.packageJSONPath)) {
-			const pathsFromPackageJSON = FileProcessor.getJSONProperty(this.packageJSONPath, "customasmRuleDefinitions");
-			if (Assert.assertArrayOfStrings(pathsFromPackageJSON)) {
-				return Path.toAbsolutePaths(pathsFromPackageJSON, this.workspacePath);
-			}
 		}
 
 		if (this.customasmConfigPath && existsSync(this.customasmConfigPath)) {

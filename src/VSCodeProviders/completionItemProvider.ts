@@ -27,7 +27,7 @@ export const completionItemProvider = {
 				if (!label) {
 					return item;
 				}
-				item.detail = label;
+				item.detail = label.value;
 				return item;
 			});
 		}

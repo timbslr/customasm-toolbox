@@ -2,6 +2,10 @@
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.2.2]
+
+- static syntax highlighting works again
+
 ## [0.2.1]
 
 - mnemonics inside comments are no longer highlighted

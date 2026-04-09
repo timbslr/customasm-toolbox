@@ -2,7 +2,7 @@
 	"name": "customasm-toolbox",
 	"displayName": "customasm-toolbox",
 	"description": "",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"engines": {
 		"vscode": "^1.106.0"
 	},
@@ -40,7 +40,13 @@
 			{
 				"language": "customasm-assembly",
 				"scopeName": "source.customasm-assembly",
-				"path": "./src/syntaxes/customasm-assembly.tmLanguage.json"
+				"path": "./syntaxes/customasm-assembly.tmLanguage.json"
+			}
+		],
+		"semanticTokenTypes": [
+			{
+				"id": "structClobbers",
+				"description": "A mnemonic from an instruction that clobbers registers"
 			}
 		]
 	},
@@ -54,7 +60,7 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
-		"@types/node": "^22.19.1",
+		"@types/node": "^22.19.17",
 		"@types/vscode": "^1.106.0",
 		"@vscode/test-cli": "^0.0.11",
 		"@vscode/test-electron": "^2.5.2",
